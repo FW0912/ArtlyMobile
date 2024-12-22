@@ -2,70 +2,103 @@ package com.mobprog.artlymobile.model;
 
 import androidx.annotation.Nullable;
 
+import java.time.LocalDateTime;
+
 public class User {
-    private String userId;
-    private String email;
-    private String password;
-    private String username;
-    private int balance;
-
+    private String IdUser;
+    private String UserName;
     @Nullable
-    private String profilePicPath;
+    private String FullName;
+    private String Email;
+    @Nullable
+    private String Gender;
+    private String Role;
+    @Nullable
+    private LocalDateTime DOB;
+    private boolean IsActive;
+    private double Balance;
 
-    public User(String userId, String email, String password, String username, int balance, String profilePicPath) {
-        this.userId = userId;
-        this.email = email;
-        this.password = password;
-        this.username = username;
-        this.balance = balance;
-        this.profilePicPath = profilePicPath;
+    public User(String idUser, String userName, String fullName, String email, String gender, String role, LocalDateTime DOB, boolean isActive, double balance) {
+        IdUser = idUser;
+        UserName = userName;
+        FullName = fullName;
+        Email = email;
+        Gender = gender;
+        Role = role;
+        this.DOB = DOB;
+        IsActive = isActive;
+        Balance = balance;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getIdUser() {
+        return IdUser;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setIdUser(String idUser) {
+        IdUser = idUser;
+    }
+
+    public String getUserName() {
+        return UserName;
+    }
+
+    public void setUserName(String userName) {
+        UserName = userName;
+    }
+
+    public String getFullName() {
+        return FullName;
+    }
+
+    public void setFullName(String fullName) {
+        FullName = fullName;
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        Email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getGender() {
+        return Gender;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setGender(String gender) {
+        Gender = gender;
     }
 
-    public String getUsername() {
-        return username;
+    public String getRole() {
+        return Role;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setRole(String role) {
+        Role = role;
     }
 
-    public int getBalance() {
-        return balance;
+    public LocalDateTime getDOB() {
+        return DOB;
     }
 
-    public void setBalance(int balance) {
-        this.balance = balance;
+    public void setDOB(LocalDateTime DOB) {
+        this.DOB = DOB;
     }
 
-    public String getProfilePicPath() {
-        return profilePicPath;
+    public boolean isActive() {
+        return IsActive;
     }
 
-    public void setProfilePicPath(String profilePicPath) {
-        this.profilePicPath = profilePicPath;
+    public void setActive(boolean active) {
+        IsActive = active;
+    }
+
+    public double getBalance() {
+        return Balance;
+    }
+
+    public void setBalance(double balance) {
+        Balance = balance;
     }
 }
