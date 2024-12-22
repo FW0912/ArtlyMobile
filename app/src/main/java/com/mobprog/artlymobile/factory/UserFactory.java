@@ -2,15 +2,20 @@ package com.mobprog.artlymobile.factory;
 
 import com.mobprog.artlymobile.model.User;
 
+import java.time.LocalDateTime;
+
 public class UserFactory {
-    public static User create(String userId, String email, String password, String username, int balance, String profilePicPath) {
+    public static User create(String idUser, String userName, String fullName, String email, String gender, String role, LocalDateTime DOB, boolean isActive, double balance) {
         return new User(
-                userId,
+                idUser,
+                userName,
+                fullName,
                 email,
-                password,
-                username,
-                balance,
-                profilePicPath
+                gender,
+                role,
+                DOB,
+                isActive,
+                balance
         );
     }
 }

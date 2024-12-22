@@ -1,7 +1,10 @@
 package com.mobprog.artlymobile.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,10 +21,13 @@ import com.mobprog.artlymobile.utils.ControllerResponse;
 import com.mobprog.artlymobile.utils.ErrorToast;
 
 public class LoginActivity extends AppCompatActivity {
+    public static final String prefKey = "LoggedInSession";
+    public static final String userIdKey = "UserId";
 
     private EditText et_email, et_password;
     private Button btn_login, btn_register;
     private UserController userController;
+    private SharedPreferences sharedPreferences;
 
     private void init() {
         et_email = findViewById(R.id.et_login_email);
@@ -30,7 +36,9 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_goToRegister);
 
-        userController = new UserController();
+        userController = new UserController(this);
+
+        sharedPreferences = getSharedPreferences(prefKey, Context.MODE_PRIVATE);
     }
 
     private void setClickListeners() {
@@ -40,8 +48,11 @@ public class LoginActivity extends AppCompatActivity {
 
             ControllerResponse response = userController.login(email, password);
 
-            if(response.isSuccessful()) {
-                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            if(response == null) {
+                Log.e("response", "no response");
+            }
+            else if(response.isSuccessful()) {
+                Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
             }
             else {
                 ErrorToast.makeToast(this, response.getMessage());
