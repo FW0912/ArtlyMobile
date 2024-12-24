@@ -1,5 +1,6 @@
 package com.mobprog.artlymobile.utils;
 
+import com.mobprog.artlymobile.service.ProductService;
 import com.mobprog.artlymobile.service.UserService;
 
 import retrofit2.Retrofit;
@@ -21,5 +22,9 @@ public class RetrofitClient {
 
     public static UserService getUserService() {
         return getInstance().create(UserService.class);
+    }
+
+    public static ProductService getProductService() {
+        return getInstance().create(ProductService.class);
     }
 }

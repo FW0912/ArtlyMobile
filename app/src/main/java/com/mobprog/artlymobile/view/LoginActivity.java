@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,12 +15,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.mobprog.artlymobile.R;
 import com.mobprog.artlymobile.controller.UserController;
-import com.mobprog.artlymobile.utils.ControllerResponse;
-import com.mobprog.artlymobile.utils.ErrorToast;
 
 public class LoginActivity extends AppCompatActivity {
-    public static final String prefKey = "LoggedInSession";
-    public static final String userIdKey = "UserId";
+    public static String PREFS_LOGIN_KEY = "LoggedInUser";
 
     private EditText et_email, et_password;
     private Button btn_login, btn_register;
@@ -38,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
         userController = new UserController(this);
 
-        sharedPreferences = getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(PREFS_LOGIN_KEY, Context.MODE_PRIVATE);
     }
 
     private void setClickListeners() {
@@ -46,17 +41,7 @@ public class LoginActivity extends AppCompatActivity {
             String email = et_email.getText().toString();
             String password = et_password.getText().toString();
 
-            ControllerResponse response = userController.login(email, password);
-
-            if(response == null) {
-                Log.e("response", "no response");
-            }
-            else if(response.isSuccessful()) {
-                Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                ErrorToast.makeToast(this, response.getMessage());
-            }
+            userController.login(email, password);
         });
 
         btn_register.setOnClickListener((v) -> {
@@ -78,5 +63,10 @@ public class LoginActivity extends AppCompatActivity {
 
         init();
         setClickListeners();
+
+        if(sharedPreferences.contains("userId")) {
+            Intent intent = new Intent(this, BottomNavigationActivity.class);
+            this.startActivity(intent);
+        }
     }
 }

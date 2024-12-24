@@ -2,10 +2,8 @@ package com.mobprog.artlymobile.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +13,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.mobprog.artlymobile.R;
 import com.mobprog.artlymobile.controller.UserController;
-import com.mobprog.artlymobile.utils.ControllerResponse;
-import com.mobprog.artlymobile.utils.ErrorToast;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -43,17 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
             String email = et_email.getText().toString();
             String password = et_password.getText().toString();
 
-            ControllerResponse response = userController.register(username, fullName, email, password);
-
-            if(response == null) {
-                Log.e("response", "no response");
-            }
-            else if(response.isSuccessful()) {
-                Toast.makeText(this, "Register success", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                ErrorToast.makeToast(this, response.getMessage());
-            }
+            userController.register(username, fullName, email, password);
         });
 
         btn_login.setOnClickListener((v) -> {
