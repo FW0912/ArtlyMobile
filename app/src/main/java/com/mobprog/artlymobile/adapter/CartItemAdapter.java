@@ -6,23 +6,28 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobprog.artlymobile.R;
+import com.mobprog.artlymobile.controller.CartItemController;
 import com.mobprog.artlymobile.model.CartItem;
 import com.mobprog.artlymobile.model.Product;
 import com.mobprog.artlymobile.utils.RangeInputFilter;
 import com.mobprog.artlymobile.view.ProductDetailsActivity;
+import com.mobprog.artlymobile.viewmodel.CartViewModel;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,20 +40,29 @@ import java.util.concurrent.Executors;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder> {
     private List<CartItem> cartItems;
+    private CartViewModel cartViewModel;
     private Context context;
 
-    public CartItemAdapter(Context context, List<CartItem> cartItems) {
+    public CartItemAdapter(Context context, CartViewModel cartViewModel, List<CartItem> cartItems) {
         this.cartItems = cartItems;
+        this.cartViewModel = cartViewModel;
         this.context = context;
     }
 
-    public List<CartItem> getCartItems() {
-        return this.cartItems;
+    private void updateTotalItems() {
+        cartViewModel.setTotalItems(cartItems.size());
     }
 
-    public void filterItems(List<CartItem> filteredCartItems) {
-        this.cartItems = filteredCartItems;
-        notifyDataSetChanged();
+    private void updateTotalPrice() {
+        int totalPrice = 0;
+
+        for(CartItem cartItem : cartItems) {
+            Product product = cartItem.getProduct();
+
+            totalPrice += (product.getPrice() * cartItem.getQty());
+        }
+
+        cartViewModel.setTotalPrice(totalPrice);
     }
 
     @Override
@@ -104,6 +118,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+
+        updateTotalItems();
+        updateTotalPrice();
     }
 
     @Override
@@ -120,6 +137,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
 
     @Override
     public void onBindViewHolder(@NonNull CartItemAdapter.CartItemViewHolder holder, int position) {
+        CartItemController cartController = new CartItemController(holder.itemView.getContext());
         CartItem cartItem = cartItems.get(position);
         Product p = cartItem.getProduct();
 
@@ -129,8 +147,15 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
 
         holder.tvProductName.setText(p.getProductName());
         holder.tvProductPrice.setText("IDR " + NumberFormat.getNumberInstance(new Locale("id", "ID")).format(p.getPrice()));
-        holder.tvProductStock.setText(p.getStock());
-        holder.etQty.setText(String.valueOf(cartItem.getQty()));
+
+        if(p.getProductType().equals("Digital")) {
+            ((ViewGroup) holder.tvProductStock.getParent()).removeAllViews();
+            ((ViewGroup) holder.llQty.getParent()).removeView(holder.llQty);
+        }
+        else {
+            holder.tvProductStock.setText(String.valueOf(p.getStock()));
+            holder.etQty.setText(String.valueOf(cartItem.getQty()));
+        }
 
         if (p.getProductImage() != null) {
             try {
@@ -170,10 +195,49 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
             context.startActivity(intent);
         });
 
+        holder.btnRemove.setOnClickListener((v) -> {
+            cartController.removeFromCart(p.getId());
+            cartItems.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, cartItems.size());
+            updateTotalItems();
+            updateTotalPrice();
+        });
+
+        holder.etQty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String qtyString = holder.etQty.getText().toString();
+
+                if(qtyString.isEmpty()) {
+                    return;
+                }
+
+                int qty = Integer.parseInt(qtyString);
+
+                if(qty >= 1 && qty <= p.getStock()) {
+                    cartController.changeCartItemQty(p.getId(), qty);
+                    cartItem.setQty(qty);
+                    updateTotalPrice();
+                }
+            }
+        });
+
         holder.btnDecrementQty.setOnClickListener((v) -> {
             String qtyString = holder.etQty.getText().toString();
 
             if(qtyString.isEmpty()) {
+                holder.tvProductStock.setText("1");
                 holder.etQty.setText("1");
                 return;
             }
@@ -182,6 +246,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
 
             if(qty > 1) {
                 qty--;
+                holder.tvProductStock.setText(String.valueOf(qty));
                 holder.etQty.setText(String.valueOf(qty));
             }
         });
@@ -190,14 +255,16 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
             String qtyString = holder.etQty.getText().toString();
 
             if(qtyString.isEmpty()) {
+                holder.tvProductStock.setText("1");
                 holder.etQty.setText("1");
                 return;
             }
 
             int qty = Integer.parseInt(qtyString);
 
-            if(qty <= p.getStock()) {
+            if(qty < p.getStock()) {
                 qty++;
+                holder.tvProductStock.setText(String.valueOf(qty));
                 holder.etQty.setText(String.valueOf(qty));
             }
         });
@@ -212,11 +279,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
         ImageView ivProductImage;
         TextView tvProductName, tvProductPrice, tvProductStock;
         EditText etQty;
-        Button btnDecrementQty, btnIncrementQty, btnDetails;
+        Button btnDecrementQty, btnIncrementQty, btnDetails, btnRemove;
+        LinearLayout llQty;
 
         public CartItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProductImage = itemView.findViewById(R.id.iv_item_cart_item_image);
+
             tvProductName = itemView.findViewById(R.id.tv_item_cart_item_name);
             tvProductPrice = itemView.findViewById(R.id.tv_item_cart_item_price);
             tvProductStock = itemView.findViewById(R.id.tv_item_cart_item_stock);
@@ -226,6 +295,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
             btnDecrementQty = itemView.findViewById(R.id.btn_cart_item_decrement_quantity);
             btnIncrementQty = itemView.findViewById(R.id.btn_cart_item_increment_quantity);
             btnDetails = itemView.findViewById(R.id.btn_cart_item_details);
+            btnRemove = itemView.findViewById(R.id.btn_cart_item_remove);
+
+            llQty = itemView.findViewById(R.id.ll_cart_item_quantity);
         }
     }
 }

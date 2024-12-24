@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:padding="30dp">
 
         <LinearLayout
@@ -71,7 +71,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_gallery_products"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="650dp"
             android:fadeScrollbars="false"
             android:scrollbars="vertical"
             android:paddingRight="10dp"

@@ -90,7 +90,7 @@ public class ProductController {
                     List<Product> products = new ArrayList<>();
                     List<Integer> idxList = new ArrayList<>();
 
-                    for(int i = 0; i < 4; i++ ) {
+                    for(int i = 0; i < 3; i++ ) {
                         Random random = new Random();
                         int idx = random.nextInt(productsElements.size());
 
