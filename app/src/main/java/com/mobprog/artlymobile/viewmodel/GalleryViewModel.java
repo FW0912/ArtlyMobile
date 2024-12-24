@@ -9,10 +9,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-public class CartViewModel extends AndroidViewModel {
+public class GalleryViewModel extends AndroidViewModel {
     private final MutableLiveData<String> username;
 
-    public CartViewModel(@NonNull Application application) {
+    public GalleryViewModel(@NonNull Application application) {
         super(application);
 
         username = new MutableLiveData<>();

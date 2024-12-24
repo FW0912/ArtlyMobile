@@ -1,15 +1,17 @@
 package com.mobprog.artlymobile.view;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.text.InputFilter;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -18,19 +20,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mobprog.artlymobile.R;
+import com.mobprog.artlymobile.controller.CartItemController;
 import com.mobprog.artlymobile.controller.ProductController;
-import com.mobprog.artlymobile.factory.ProductFactory;
 import com.mobprog.artlymobile.model.Product;
+import com.mobprog.artlymobile.utils.RangeInputFilter;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,9 +40,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView tvProductName, tvProductPrice,
             tvProductDescription, tvProductCategory,
             tvProductType, tvProductStock;
-
-    private Button btnBack, btnAddCart;
-    private ProductController productController;
+    private EditText etQty;
+    private Button btnBack, btnDecrementQty, btnIncrementQty, btnAddCart;
+    private LinearLayout llQty;
+    private CartItemController cartController;
 
     private void init() {
         ivProductImage = findViewById(R.id.iv_product_details_image);
@@ -52,10 +53,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
         tvProductCategory = findViewById(R.id.tv_product_details_category);
         tvProductType = findViewById(R.id.tv_product_details_type);
         tvProductStock = findViewById(R.id.tv_product_details_stock);
+
+        etQty = findViewById(R.id.et_product_details_quantity);
+
         btnBack = findViewById(R.id.btn_product_details_back);
+        btnDecrementQty = findViewById(R.id.btn_product_details_decrement_quantity);
+        btnIncrementQty = findViewById(R.id.btn_product_details_increment_quantity);
         btnAddCart = findViewById(R.id.btn_product_details_add_cart);
 
-        productController = new ProductController(this);
+        llQty = findViewById(R.id.ll_product_details_quantity);
+
+        cartController = new CartItemController(this);
     }
 
     @Override
@@ -81,6 +89,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
         String productCategory = intent.getStringExtra("productCategory");
         String productType = intent.getStringExtra("productType");
         int productStock = intent.getIntExtra("productStock", 0);
+        boolean fromCart = intent.getBooleanExtra("fromCart", false);
+
+        if(fromCart) {
+            ((ViewGroup) tvProductStock.getParent()).removeAllViews();
+            ((ViewGroup) llQty.getParent()).removeView(llQty);
+            ((ViewGroup) btnAddCart.getParent()).removeView(btnAddCart);
+        }
+
+        RangeInputFilter rangeInputFilter = new RangeInputFilter(1, productStock);
+        InputFilter[] filters = new InputFilter[] {rangeInputFilter};
+        etQty.setFilters(filters);
 
         if(productImage != null) {
             try {
@@ -105,13 +124,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
 
         tvProductName.setText(productName);
-        tvProductPrice.setText("IDR " + productPrice);
+        tvProductPrice.setText("IDR " + NumberFormat.getNumberInstance(new Locale("id", "ID")).format(productPrice));
         tvProductDescription.setText(productDescription);
         tvProductCategory.setText(productCategory);
         tvProductType.setText(productType);
 
         if(productType.equals("Digital")) {
-            tvProductStock.setText("Unlimited");
+            ((ViewGroup) tvProductStock.getParent()).removeAllViews();
+            ((ViewGroup) llQty.getParent()).removeView(llQty);
         }
         else {
             tvProductStock.setText(String.valueOf(productStock));
@@ -121,11 +141,52 @@ public class ProductDetailsActivity extends AppCompatActivity {
             finish();
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Cart", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        btnDecrementQty.setOnClickListener((v) -> {
+            String qtyString = etQty.getText().toString();
+
+            if(qtyString.isEmpty()) {
+                etQty.setText("1");
+                return;
+            }
+
+            int qty = Integer.parseInt(qtyString);
+
+            if(qty > 1) {
+                qty--;
+                etQty.setText(String.valueOf(qty));
+            }
+        });
+
+        btnIncrementQty.setOnClickListener((v) -> {
+            String qtyString = etQty.getText().toString();
+
+            if(qtyString.isEmpty()) {
+                etQty.setText("1");
+                return;
+            }
+
+            int qty = Integer.parseInt(qtyString);
+
+            if(qty <= productStock) {
+                qty++;
+                etQty.setText(String.valueOf(qty));
+            }
+        });
 
         btnAddCart.setOnClickListener((v) -> {
-            productController.addToCart(productId, productImage, productName, productPrice, productDescription, productCategory, productType, productStock);
+            String qtyString = etQty.getText().toString();
+
+            if(qtyString.isEmpty()) {
+                return;
+            }
+
+            int qty = Integer.parseInt(qtyString);
+
+            if(qty < 1 || qty > productStock) {
+                return;
+            }
+
+            cartController.addToCart(productId, productImage, productName, productPrice, productDescription, productCategory, productType, productStock, qty);
         });
     }
 }
