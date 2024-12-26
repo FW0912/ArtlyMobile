@@ -1,7 +1,9 @@
 package com.mobprog.artlymobile.service;
 
 import com.google.gson.JsonObject;
+import com.mobprog.artlymobile.request.GetUserByIdRequest;
 import com.mobprog.artlymobile.request.RegisterRequest;
+import com.mobprog.artlymobile.result.GetUserByIdResult;
 import com.mobprog.artlymobile.utils.ApiResponse;
 
 import retrofit2.Call;
@@ -17,4 +19,7 @@ public interface UserService {
 
     @POST("/User/register")
     Call<ApiResponse<String>> register(@Header("Authorization") String apiKey, @Body() RegisterRequest request);
+
+    @GET("/User/getuserbyid")
+    Call<ApiResponse<GetUserByIdResult>> getUserById(@Header("Authorization") String apikey, @Body() GetUserByIdRequest request);
 }
