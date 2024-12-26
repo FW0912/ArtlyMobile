@@ -90,6 +90,7 @@ public class UserController {
                         editor.commit();
 
                         Intent intent = new Intent(context, BottomNavigationActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(intent);
                     }
                     else {
@@ -159,5 +160,19 @@ public class UserController {
                 ErrorToast.makeToast(context, "Something went wrong!");
             }
         });
+    }
+
+    public void logout(){
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("LoggedInUser", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+
+        Toast.makeText(context, "You have successfully logged out.", Toast.LENGTH_SHORT).show();
     }
 }
