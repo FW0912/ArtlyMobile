@@ -2,6 +2,9 @@ package com.mobprog.artlymobile.view;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,11 +26,6 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private UserController userController;
-    private ProfileViewModel mViewModel;
-
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,6 +56,26 @@ public class ProfileFragment extends Fragment {
             userController.logout();
         });
 
+        Button topup_btn = view.findViewById(R.id.topup_btn_profile);
+        topup_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TopupActivity.class);
+            startActivity(intent);
+        });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshProfileData();
+    }
+
+    private void refreshProfileData() {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("LoggedInUser", Context.MODE_PRIVATE);
+        int balance = sharedPreferences.getInt("balance", 0);
+
+        TextView balanceTextView = getView().findViewById(R.id.tv_profile_balance);
+        balanceTextView.setText(String.format("Rp. %,d", balance));
+    }
+
 
 }
