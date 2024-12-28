@@ -16,6 +16,7 @@ import com.mobprog.artlymobile.utils.ApiResponse;
 import com.mobprog.artlymobile.utils.EntityValue;
 import com.mobprog.artlymobile.utils.ErrorToast;
 import com.mobprog.artlymobile.utils.RetrofitClient;
+import com.mobprog.artlymobile.utils.SuccessToast;
 import com.mobprog.artlymobile.view.BottomNavigationActivity;
 import com.mobprog.artlymobile.view.LoginActivity;
 import com.mobprog.artlymobile.view.TopupActivity;
@@ -163,7 +164,7 @@ public class UserController {
         });
     }
 
-    public void logout(){
+    public void logout() {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("LoggedInUser", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -174,10 +175,10 @@ public class UserController {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
 
-        Toast.makeText(context, "You have successfully logged out.", Toast.LENGTH_SHORT).show();
+        SuccessToast.makeToast(context, "You have successfully logged out.");
     }
 
-    public void refreshLatestUserData(String IdUser){
+    public void refreshLatestUserData(String IdUser) {
         if(IdUser.equals("") || IdUser == null){
             ErrorToast.makeToast(context, "Error");
             return;
@@ -245,7 +246,7 @@ public class UserController {
         });
     }
 
-    public void topupBalance(TopupUserBalanceRequest request){
+    public void topupBalance(TopupUserBalanceRequest request) {
         if(request.getIdUser().equals("") || request.getIdUser() == null){
             ErrorToast.makeToast(context, "You have to log in before you can topup your balance");
             return;
@@ -265,9 +266,7 @@ public class UserController {
                     if(r.getStatusCode() == 200){
                         refreshLatestUserData(request.getIdUser());
 
-                        new android.os.Handler().postDelayed(() -> {
-                            Toast.makeText(context, "Top-up successful!", Toast.LENGTH_SHORT).show();
-                        }, 1000);
+                        SuccessToast.makeToast(context, "Top-up successful!");
                     }
                     else {
                         ErrorToast.makeToast(context, r.getMessage());
