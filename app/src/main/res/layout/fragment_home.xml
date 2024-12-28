@@ -6,145 +6,133 @@
     android:background="@drawable/body_background"
     tools:context=".view.HomeFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="30dp">
+            android:orientation="horizontal"
+            android:layout_marginBottom="30sp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="48sp"
+                android:layout_height="48sp"
+                android:src="@drawable/artlybrandimage"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inria_serif"
+                android:paddingBottom="5sp"
+                android:text="Artly"
+                android:textSize="32sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="30sp"
-                android:gravity="center">
+                android:gravity="end|center">
 
                 <ImageView
-                    android:layout_width="48sp"
-                    android:layout_height="48sp"
-                    android:src="@drawable/artlybrandimage"
-                    android:layout_marginLeft="5dp"/>
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_profile"/>
 
                 <TextView
+                    android:id="@+id/tv_home_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/inria_serif"
-                    android:paddingBottom="5sp"
-                    android:text="Artly"
-                    android:textSize="32sp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="end|center">
-
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_profile"/>
-
-                    <TextView
-                        android:id="@+id/tv_home_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:text="username"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Welcome, "/>
-
-                <TextView
-                    android:id="@+id/tv_home_welcome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textColor="@color/primary"
+                    android:textSize="16sp"
                     android:text="username"/>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:orientation="horizontal">
+                android:textSize="20sp"
+                android:text="Welcome, "/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Your account balance: "/>
-
-                <TextView
-                    android:id="@+id/tv_home_balance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
-                    android:text="balance"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_home_welcome"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Art you might be"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textColor="@color/secondary"
-                    android:text=" interested "/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="in"/>
-
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_home_interested_products"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:fadeScrollbars="false"
-                android:scrollbars="vertical"
-                android:paddingBottom="100dp"
-                android:paddingRight="10dp"
-                android:scrollbarSize="1dp"
-                android:nestedScrollingEnabled="true"
-                android:scrollbarThumbVertical="@drawable/scrollbar_thumb"/>
+                android:textSize="20sp"
+                android:textColor="@color/primary"
+                android:text="username"/>
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your account balance: "/>
+
+            <TextView
+                android:id="@+id/tv_home_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary"
+                android:text="balance"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Art you might be"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/secondary"
+                android:text=" interested "/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="in"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_home_interested_products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="100dp"/>
+
+    </LinearLayout>
+
 </FrameLayout>

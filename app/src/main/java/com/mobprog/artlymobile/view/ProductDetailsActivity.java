@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +41,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private TextView tvProductName, tvProductPrice,
             tvProductDescription, tvProductCategory,
-            tvProductType, tvProductStock;
+            tvProductType, tvProductStock, tvAlreadyInCart;
     private EditText etQty;
     private Button btnBack, btnDecrementQty, btnIncrementQty, btnAddCart;
     private LinearLayout llQty;
@@ -53,6 +55,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         tvProductCategory = findViewById(R.id.tv_product_details_category);
         tvProductType = findViewById(R.id.tv_product_details_type);
         tvProductStock = findViewById(R.id.tv_product_details_stock);
+        tvAlreadyInCart = findViewById(R.id.tv_product_details_already_in_cart);
 
         etQty = findViewById(R.id.et_product_details_quantity);
 
@@ -82,20 +85,22 @@ public class ProductDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String productId = intent.getStringExtra("productId");
-        String productImage = intent.getStringExtra("productImage");
-        String productName = intent.getStringExtra("productName");
-        int productPrice = intent.getIntExtra("productPrice", 0);
-        String productDescription = intent.getStringExtra("productDescription");
-        String productCategory = intent.getStringExtra("productCategory");
-        String productType = intent.getStringExtra("productType");
-        int productStock = intent.getIntExtra("productStock", 0);
-        boolean fromCart = intent.getBooleanExtra("fromCart", false);
 
-        if(fromCart) {
-            ((ViewGroup) tvProductStock.getParent()).removeAllViews();
-            ((ViewGroup) llQty.getParent()).removeView(llQty);
-            ((ViewGroup) btnAddCart.getParent()).removeView(btnAddCart);
+        ProductController controller = new ProductController(this);
+        Product product = controller.getProductById(productId);
+
+        if(product == null) {
+            finish();
+            return;
         }
+
+        String productImage = product.getProductImage();
+        String productName = product.getProductName();
+        int productPrice = product.getPrice();
+        String productDescription = product.getProductDescription();
+        String productCategory = product.getProductCategory();
+        String productType = product.getProductType();
+        int productStock = product.getStock();
 
         RangeInputFilter rangeInputFilter = new RangeInputFilter(1, productStock);
         InputFilter[] filters = new InputFilter[] {rangeInputFilter};
@@ -129,49 +134,72 @@ public class ProductDetailsActivity extends AppCompatActivity {
         tvProductCategory.setText(productCategory);
         tvProductType.setText(productType);
 
+        btnBack.setOnClickListener((v) -> {
+            finish();
+        });
+
+//      Check if activity is started from Cart fragment or if it is already in cart
+        if(cartController.foundProductInCart(productId)) {
+            tvAlreadyInCart.setVisibility(View.VISIBLE);
+
+            if(productType.equals("Digital")) {
+                ((ViewGroup) tvProductStock.getParent()).removeAllViews();
+            }
+            else {
+                tvProductStock.setText(String.valueOf(productStock));
+            }
+
+            ((ViewGroup) llQty.getParent()).removeView(llQty);
+            ((ViewGroup) btnAddCart.getParent()).removeView(btnAddCart);
+            return;
+        }
+
+//      Check if product type is digital
         if(productType.equals("Digital")) {
             ((ViewGroup) tvProductStock.getParent()).removeAllViews();
             ((ViewGroup) llQty.getParent()).removeView(llQty);
         }
         else {
             tvProductStock.setText(String.valueOf(productStock));
+
+            btnDecrementQty.setOnClickListener((v) -> {
+                String qtyString = etQty.getText().toString();
+
+                if(qtyString.isEmpty()) {
+                    etQty.setText("1");
+                    return;
+                }
+
+                int qty = Integer.parseInt(qtyString);
+
+                if(qty > 1) {
+                    qty--;
+                    etQty.setText(String.valueOf(qty));
+                }
+            });
+
+            btnIncrementQty.setOnClickListener((v) -> {
+                String qtyString = etQty.getText().toString();
+
+                if(qtyString.isEmpty()) {
+                    etQty.setText("1");
+                    return;
+                }
+
+                int qty = Integer.parseInt(qtyString);
+
+                if(qty < productStock) {
+                    qty++;
+                    etQty.setText(String.valueOf(qty));
+                }
+            });
         }
 
-        btnBack.setOnClickListener((v) -> {
-            finish();
-        });
-
-        btnDecrementQty.setOnClickListener((v) -> {
-            String qtyString = etQty.getText().toString();
-
-            if(qtyString.isEmpty()) {
-                etQty.setText("1");
-                return;
-            }
-
-            int qty = Integer.parseInt(qtyString);
-
-            if(qty > 1) {
-                qty--;
-                etQty.setText(String.valueOf(qty));
-            }
-        });
-
-        btnIncrementQty.setOnClickListener((v) -> {
-            String qtyString = etQty.getText().toString();
-
-            if(qtyString.isEmpty()) {
-                etQty.setText("1");
-                return;
-            }
-
-            int qty = Integer.parseInt(qtyString);
-
-            if(qty <= productStock) {
-                qty++;
-                etQty.setText(String.valueOf(qty));
-            }
-        });
+//      Check if product is out of stock
+        if(productStock == 0) {
+            ((ViewGroup) btnAddCart.getParent()).removeView(btnAddCart);
+            return;
+        }
 
         btnAddCart.setOnClickListener((v) -> {
             String qtyString = etQty.getText().toString();
@@ -186,7 +214,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 return;
             }
 
-            cartController.addToCart(productId, productImage, productName, productPrice, productDescription, productCategory, productType, productStock, qty);
+            cartController.addToCart(productId, qty);
+            finish();
         });
     }
 }
