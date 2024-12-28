@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/body_background"
+    tools:context=".view.TransactionDetailsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_transaction_details_back"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/transparent"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/ic_back_arrow"
+            android:textAllCaps="false"
+            android:text="Back"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary"
+                    android:textSize="16sp"
+                    android:textAlignment="center"
+                    android:text="Transaction Id"/>
+
+                <TextView
+                    android:id="@+id/tv_transaction_details_transaction_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textAlignment="center"
+                    android:text="Transaction Id"/>
+
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary"
+                    android:text="Transaction Date"/>
+
+                <TextView
+                    android:id="@+id/tv_transaction_details_transaction_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:text="Transaction Date"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary"
+                    android:text="Payment Method"/>
+
+                <TextView
+                    android:id="@+id/tv_transaction_details_payment_method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:text="Payment Method"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_transaction_details_product_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:textSize="16sp"
+                android:text="Product Count products were purchased in this transaction."/>
+
+            <TextView
+                android:id="@+id/tv_transaction_details_quantity_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:textSize="16sp"
+                android:text="Quantity Count items were purchased in this transaction."/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_transaction_details"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:fadeScrollbars="false"
+                android:scrollbars="vertical"
+                android:paddingBottom="30dp"
+                android:scrollbarSize="1dp"
+                android:nestedScrollingEnabled="true"
+                android:scrollbarThumbVertical="@drawable/scrollbar_thumb"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

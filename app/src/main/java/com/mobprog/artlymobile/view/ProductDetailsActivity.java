@@ -134,9 +134,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         tvProductCategory.setText(productCategory);
         tvProductType.setText(productType);
 
-        btnBack.setOnClickListener((v) -> {
-            finish();
-        });
+        btnBack.setOnClickListener((v) -> finish());
 
 //      Check if activity is started from Cart fragment or if it is already in cart
         if(cartController.foundProductInCart(productId)) {

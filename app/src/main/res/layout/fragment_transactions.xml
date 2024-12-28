@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/body_background"
+    tools:context=".view.TransactionsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20sp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="48sp"
+                android:layout_height="48sp"
+                android:src="@drawable/artlybrandimage"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inria_serif"
+                android:paddingBottom="5sp"
+                android:text="Artly"
+                android:textSize="32sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end|center">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_profile"/>
+
+                <TextView
+                    android:id="@+id/tv_transactions_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="username"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/primary"
+            android:text="Your Transactions"/>
+
+        <TextView
+            android:id="@+id/tv_transactions_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:textSize="16sp"
+            android:text="You have no transactions."/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_transactions"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:fadeScrollbars="false"
+            android:scrollbars="vertical"
+            android:paddingBottom="30dp"
+            android:scrollbarSize="1dp"
+            android:nestedScrollingEnabled="true"
+            android:scrollbarThumbVertical="@drawable/scrollbar_thumb"/>
+
+    </LinearLayout>
+
+</FrameLayout>
