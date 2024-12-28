@@ -2,7 +2,9 @@ package com.mobprog.artlymobile.view;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.mobprog.artlymobile.R;
 import com.mobprog.artlymobile.controller.CartItemController;
 import com.mobprog.artlymobile.databinding.FragmentCartBinding;
+import com.mobprog.artlymobile.utils.SuccessToast;
 import com.mobprog.artlymobile.viewmodel.CartViewModel;
 
 public class CartFragment extends Fragment {
@@ -84,6 +87,16 @@ public class CartFragment extends Fragment {
         if(sharedPreferences.contains("CartItems")) {
             rvCartItems.setLayoutManager(new LinearLayoutManager(getContext()));
             cartItemController.bindCart(rvCartItems, cartViewModel);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("Are you sure?")
+                    .setPositiveButton("Confirm", (dialog, which) -> cartItemController.buyProducts(rvCartItems, cartViewModel))
+                    .setNegativeButton("Cancel", null);
+
+            btnPurchase.setOnClickListener((v) -> {
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            });
         }
         else {
             ((ViewGroup) rvCartItems.getParent()).removeView(rvCartItems);

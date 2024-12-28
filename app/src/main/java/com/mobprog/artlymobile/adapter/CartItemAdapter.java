@@ -183,14 +183,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
             Intent intent = new Intent(context, ProductDetailsActivity.class);
 
             intent.putExtra("productId", p.getId());
-            intent.putExtra("productImage", p.getProductImage());
-            intent.putExtra("productName", p.getProductName());
-            intent.putExtra("productPrice", p.getPrice());
-            intent.putExtra("productDescription", p.getProductDescription());
-            intent.putExtra("productCategory", p.getProductCategory());
-            intent.putExtra("productType", p.getProductType());
-            intent.putExtra("productStock", p.getStock());
-            intent.putExtra("fromCart", true);
 
             context.startActivity(intent);
         });

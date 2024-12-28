@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -84,14 +85,22 @@ public class ProductDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String productId = intent.getStringExtra("productId");
-        String productImage = intent.getStringExtra("productImage");
-        String productName = intent.getStringExtra("productName");
-        int productPrice = intent.getIntExtra("productPrice", 0);
-        String productDescription = intent.getStringExtra("productDescription");
-        String productCategory = intent.getStringExtra("productCategory");
-        String productType = intent.getStringExtra("productType");
-        int productStock = intent.getIntExtra("productStock", 0);
-        boolean fromCart = intent.getBooleanExtra("fromCart", false);
+
+        ProductController controller = new ProductController(this);
+        Product product = controller.getProductById(productId);
+
+        if(product == null) {
+            finish();
+            return;
+        }
+
+        String productImage = product.getProductImage();
+        String productName = product.getProductName();
+        int productPrice = product.getPrice();
+        String productDescription = product.getProductDescription();
+        String productCategory = product.getProductCategory();
+        String productType = product.getProductType();
+        int productStock = product.getStock();
 
         RangeInputFilter rangeInputFilter = new RangeInputFilter(1, productStock);
         InputFilter[] filters = new InputFilter[] {rangeInputFilter};
@@ -130,7 +139,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
 
 //      Check if activity is started from Cart fragment or if it is already in cart
-        if(fromCart || cartController.foundProductInCart(productId)) {
+        if(cartController.foundProductInCart(productId)) {
             tvAlreadyInCart.setVisibility(View.VISIBLE);
 
             if(productType.equals("Digital")) {
@@ -205,7 +214,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 return;
             }
 
-            cartController.addToCart(productId, productImage, productName, productPrice, productDescription, productCategory, productType, productStock, qty);
+            cartController.addToCart(productId, qty);
             finish();
         });
     }

@@ -34,10 +34,16 @@ public class CartViewModel extends AndroidViewModel {
         balanceAfterString = new MutableLiveData<>();
 
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("LoggedInUser", Context.MODE_PRIVATE);
-
         username.setValue(sharedPreferences.getString("username", ""));
 
         balance = sharedPreferences.getInt("balance", 0);
+        currentBalance.setValue("IDR " + NumberFormat.getNumberInstance(new Locale("id", "ID")).format(balance));
+
+        balanceAfter.setValue(balance);
+        balanceAfterString.setValue(currentBalance.getValue());
+    }
+
+    public void updateBalanceAfterPurchase(int balance) {
         currentBalance.setValue("IDR " + NumberFormat.getNumberInstance(new Locale("id", "ID")).format(balance));
 
         balanceAfter.setValue(balance);
