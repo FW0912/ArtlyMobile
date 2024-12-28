@@ -2,11 +2,11 @@ package com.mobprog.artlymobile.utils;
 
 public class EntityValue {
     private final String id;
-    private final String Description;
+    private final String description;
 
     public EntityValue(String id, String description) {
         this.id = id;
-        Description = description;
+        this.description = description;
     }
 
     public String getId() {
@@ -14,6 +14,6 @@ public class EntityValue {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 }
