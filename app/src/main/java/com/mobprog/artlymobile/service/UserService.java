@@ -3,6 +3,7 @@ package com.mobprog.artlymobile.service;
 import com.google.gson.JsonObject;
 import com.mobprog.artlymobile.request.RegisterRequest;
 import com.mobprog.artlymobile.request.TopupUserBalanceRequest;
+import com.mobprog.artlymobile.request.UpdateProfileRequest;
 import com.mobprog.artlymobile.result.GetUserByIdResult;
 import com.mobprog.artlymobile.utils.ApiResponse;
 
@@ -25,4 +26,7 @@ public interface UserService {
 
     @POST("/User/topupbalance")
     Call<ApiResponse>  topupUserBalance(@Header("Authorization") String apikey, @Body()TopupUserBalanceRequest request);
+
+    @POST("/User/updateprofile")
+    Call<ApiResponse> updateProfile(@Header("Authorization") String apikey, @Body()UpdateProfileRequest request);
 }
