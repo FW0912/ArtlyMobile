@@ -21,6 +21,6 @@ public class RangeInputFilter implements InputFilter {
             int input = Integer.parseInt(result);
             if (min <= input && input <= max) return null;
         } catch (NumberFormatException ignored) { }
-        return String.valueOf(min);
+        return "";
     }
 }

@@ -1,8 +1,9 @@
 package com.mobprog.artlymobile.service;
 
 import com.google.gson.JsonObject;
-import com.mobprog.artlymobile.request.GetUserByIdRequest;
 import com.mobprog.artlymobile.request.RegisterRequest;
+import com.mobprog.artlymobile.request.TopupUserBalanceRequest;
+import com.mobprog.artlymobile.request.UpdateProfileRequest;
 import com.mobprog.artlymobile.result.GetUserByIdResult;
 import com.mobprog.artlymobile.utils.ApiResponse;
 
@@ -21,5 +22,11 @@ public interface UserService {
     Call<ApiResponse<String>> register(@Header("Authorization") String apiKey, @Body() RegisterRequest request);
 
     @GET("/User/getuserbyid")
-    Call<ApiResponse<GetUserByIdResult>> getUserById(@Header("Authorization") String apikey, @Body() GetUserByIdRequest request);
+    Call<ApiResponse<GetUserByIdResult>> getUserById(@Header("Authorization") String apiKey, @Query("IdUser") String userId);
+
+    @POST("/User/topupbalance")
+    Call<ApiResponse>  topupUserBalance(@Header("Authorization") String apikey, @Body()TopupUserBalanceRequest request);
+
+    @POST("/User/updateprofile")
+    Call<ApiResponse> updateProfile(@Header("Authorization") String apikey, @Body()UpdateProfileRequest request);
 }

@@ -4,4 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#FCBF49</color>
     <color name="secondary">#58FFFF</color>
+    <color name="red">#C42626</color>
+    <color name="light_gray">#CBCBCB</color>
+    <color name="gray">#525252</color>
+    <color name="transaction_completed_status_background">#9BE86C</color>
+    <color name="transaction_completed_status_text">#139D0D</color>
 </resources>
