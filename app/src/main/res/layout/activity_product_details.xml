@@ -140,6 +140,16 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_product_details_already_in_cart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/primary"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:text="Art is already in your Cart!"/>
+
         <LinearLayout
             android:id="@+id/ll_product_details_quantity"
             android:layout_width="wrap_content"

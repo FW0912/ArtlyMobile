@@ -9,6 +9,8 @@
         <item name="android:textColorHint">#CFCFCF</item>
 
         <item name="materialButtonStyle">@style/Theme.ArtlyMobile.Button</item>
+
+        <item name="android:alertDialogTheme">@style/Theme.ArtlyMobile.AlertDialog</item>
     </style>
 
     <style name="Theme.ArtlyMobile.Text" parent="Base.Theme.ArtlyMobile">
@@ -19,6 +21,17 @@
         <item name="backgroundTint">@null</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Theme.ArtlyMobile.AlertDialog.ButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="Theme.ArtlyMobile.AlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/body_background</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/Theme.ArtlyMobile.AlertDialog.ButtonStyle</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/Theme.ArtlyMobile.AlertDialog.ButtonStyle</item>
     </style>
 
 </resources>

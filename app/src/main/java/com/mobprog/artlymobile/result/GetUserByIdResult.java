@@ -12,8 +12,9 @@ public class GetUserByIdResult extends EntityValue {
     private final EntityValue gender;
     private final EntityValue role;
     private final Date dob;
+    private final int balance;
 
-    public GetUserByIdResult(String id, String description, String userName, String fullName, String email, String password, EntityValue gender, EntityValue role, Date dob) {
+    public GetUserByIdResult(String id, String description, String userName, String fullName, String email, String password, EntityValue gender, EntityValue role, Date dob, int balance) {
         super(id, description);
         this.userName = userName;
         this.fullName = fullName;
@@ -22,6 +23,7 @@ public class GetUserByIdResult extends EntityValue {
         this.gender = gender;
         this.role = role;
         this.dob = dob;
+        this.balance = balance;
     }
 
     public String getUserName() {
@@ -50,5 +52,9 @@ public class GetUserByIdResult extends EntityValue {
 
     public Date getDob() {
         return dob;
+    }
+
+    public int getBalance() {
+        return balance;
     }
 }
