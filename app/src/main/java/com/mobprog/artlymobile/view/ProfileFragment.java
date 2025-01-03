@@ -61,6 +61,12 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), TopupActivity.class);
             startActivity(intent);
         });
+
+        Button account_info_btn = view.findViewById(R.id.btn_account_info);
+        account_info_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AccountInformationActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

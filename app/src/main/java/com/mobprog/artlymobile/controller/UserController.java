@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.mobprog.artlymobile.request.RegisterRequest;
 import com.mobprog.artlymobile.request.TopupUserBalanceRequest;
+import com.mobprog.artlymobile.request.UpdateProfileRequest;
 import com.mobprog.artlymobile.result.GetUserByIdResult;
 import com.mobprog.artlymobile.service.UserService;
 import com.mobprog.artlymobile.utils.ApiResponse;
@@ -21,7 +22,10 @@ import com.mobprog.artlymobile.view.BottomNavigationActivity;
 import com.mobprog.artlymobile.view.LoginActivity;
 import com.mobprog.artlymobile.view.TopupActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
@@ -84,10 +88,18 @@ public class UserController {
                             editor.putString("role", role);
                         }
 
-                        if(!json.get("dob").isJsonNull()) {
-                            String dob = json.get("dob").getAsString();
-                            editor.putString("dob", dob);
+                        if (!json.get("dob").isJsonNull()) {
+                            String dobString = json.get("dob").getAsString();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                            try {
+                                Date dob = dateFormat.parse(dobString);
+                                long dobTimestamp = dob.getTime();
+                                editor.putLong("dob", dobTimestamp);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
+
 
                         editor.commit();
 
@@ -225,9 +237,11 @@ public class UserController {
                         }
 
                         if(data.getDob() != null) {
-                            Date dob = data.getDob();
-                            String stringDob = String.format("dd-mm-yyyy", dob);
-                            editor.putString("dob", stringDob);
+                            if (data.getDob() != null) {
+                                Date dob = data.getDob();
+                                long dobTimestamp = dob.getTime();
+                                editor.putLong("dob", dobTimestamp);
+                            }
                         }
 
                         editor.commit();
@@ -280,4 +294,43 @@ public class UserController {
             }
         });
     }
+
+    public void updateProfile(UpdateProfileRequest request, Consumer<Boolean> callback) {
+        if (request.getIdUser() == null || request.getIdUser().isEmpty()) {
+            ErrorToast.makeToast(context, "You have to log in before you can update your profile");
+            callback.accept(false); // Kirim status gagal jika ID User tidak valid
+            return;
+        }
+
+        Call<ApiResponse> call = service.updateProfile(API_KEY, request);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful()) {
+                    ApiResponse r = response.body();
+                    if (r.getStatusCode() == 200) {
+                        refreshLatestUserData(request.getIdUser());
+                        SuccessToast.makeToast(context, "Update Profile successful!");
+                        new android.os.Handler().postDelayed(() -> {
+                            callback.accept(true);
+                        }, 1000);
+
+                    } else {
+                        ErrorToast.makeToast(context, "Failed to update profile!");
+                        callback.accept(false);
+                    }
+                } else {
+                    ErrorToast.makeToast(context, "Server error: " + response.message());
+                    callback.accept(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable throwable) {
+                ErrorToast.makeToast(context, "Something went wrong: " + throwable.getMessage());
+                callback.accept(false);
+            }
+        });
+    }
+
 }
